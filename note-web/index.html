@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notes</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Notes</h1>
+            <button id="new-note-btn" class="btn btn-primary">+ New Note</button>
+        </header>
+
+        <div class="search-bar">
+            <input type="text" id="search-input" placeholder="Search notes...">
+        </div>
+
+        <div id="notes-list" class="notes-list"></div>
+
+        <div id="note-editor" class="note-editor hidden">
+            <div class="editor-header">
+                <button id="cancel-btn" class="btn">Cancel</button>
+                <button id="save-btn" class="btn btn-primary">Save</button>
+            </div>
+            <input type="text" id="note-title" placeholder="Title" autocomplete="off">
+            <input type="url" id="note-url" placeholder="Or paste a URL to fetch content...">
+            <textarea id="note-content" placeholder="Write your note..."></textarea>
+        </div>
+    </div>
+    <script src="app.js"></script>
+</body>
+</html>

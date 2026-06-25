@@ -1,0 +1,37 @@
+services:
+  api:
+    build: ./note-app
+    ports:
+      - "8000:8000"
+    environment:
+      CORS_ORIGINS: http://127.0.0.1:8001,http://localhost:8001
+      DATABASE_URL: postgresql+asyncpg://postgres:postgres@db:5432/notes
+    depends_on:
+      db:
+        condition: service_healthy
+
+  web:
+    build: ./note-web
+    ports:
+      - "8001:8001"
+    depends_on:
+      - api
+
+  db:
+    image: postgres:16-alpine
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: notes
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+volumes:
+  pg_data:
