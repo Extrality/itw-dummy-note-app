@@ -108,7 +108,12 @@ class FetchUrlResponse:
 
 @post("/fetch-url")
 async def fetch_url(data: FetchUrlRequest) -> FetchUrlResponse:
-    async with httpx.AsyncClient() as client:
+    import ssl
+    ssl_context = ssl.create_default_context()
+    ssl_context.check_hostname = False
+    ssl_context.verify_mode = ssl.CERT_NONE
+    transport = httpx.AsyncHTTPTransport(verify=ssl_context)
+    async with httpx.AsyncClient(transport=transport, follow_redirects=True, timeout=30) as client:
         resp = await client.get(data.url)
     return FetchUrlResponse(content=resp.text)
 

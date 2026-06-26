@@ -4,7 +4,7 @@ services:
     ports:
       - "8000:8000"
     environment:
-      CORS_ORIGINS: http://127.0.0.1:8001,http://localhost:8001
+      CORS_ORIGINS: 127.0.0.1:8000
       DATABASE_URL: postgresql+asyncpg://postgres:postgres@db:5432/notes
     depends_on:
       db:
