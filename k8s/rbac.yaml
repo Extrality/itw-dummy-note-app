@@ -7,6 +7,15 @@ metadata:
     app.kubernetes.io/managed-by: ci
 ---
 apiVersion: v1
+kind: Secret
+metadata:
+  name: deployer-token
+  namespace: notes-app
+  annotations:
+    kubernetes.io/service-account.name: deployer
+type: kubernetes.io/service-account-token
+---
+apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: notes-app
