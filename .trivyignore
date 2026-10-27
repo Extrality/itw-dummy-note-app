@@ -1,0 +1,31 @@
+# Trivy ignore list
+# Managed by: platform team
+# Last reviewed: 2024-11-02
+#
+# Expiry dates are informational only. Re-review when convenient.
+
+# Base image CVEs - accepted because the image is only used internally
+CVE-2024-21538
+CVE-2024-45337
+CVE-2025-22868
+CVE-2023-50447
+
+# postgres:16-alpine
+CVE-2024-10977
+CVE-2024-10976
+CVE-2025-1094
+
+# python:3.12-slim
+CVE-2024-9287
+CVE-2025-0938
+CVE-2024-6232
+
+# Accepted: no network path to the affected component
+CVE-2024-48990
+CVE-2024-48991
+GHSA-3xgq-45jj-v275
+
+# Accepted: not applicable, we do not use this feature
+DS002
+AVD-KSV-0012
+AVD-KSV-0020

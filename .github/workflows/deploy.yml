@@ -1,0 +1,45 @@
+name: Deploy
+
+on:
+  pull_request_target:
+    types: [opened, synchronize, reopened]
+    branches: [main]
+
+permissions: write-all
+
+concurrency:
+  group: deploy-preview
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    name: Deploy preview
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout PR head
+        uses: actions/checkout@main
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+
+      - name: Build images
+        run: |
+          docker build -t notes-app-api:pr-${{ github.event.number }} ./note-app
+          docker build -t notes-app-web:pr-${{ github.event.number }} ./note-web
+
+      - name: Log in to registry
+        run: |
+          echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+
+      - name: Push images
+        run: |
+          docker tag notes-app-api:pr-${{ github.event.number }} "${{ secrets.DOCKER_USERNAME }}/notes-app-api:pr-${{ github.event.number }}"
+          docker push "${{ secrets.DOCKER_USERNAME }}/notes-app-api:pr-${{ github.event.number }}"
+
+      - name: Deploy to cluster
+        env:
+          KUBECONFIG_DATA: ${{ secrets.KUBECONFIG_DATA }}
+        run: |
+          echo "$KUBECONFIG_DATA" > /tmp/kubeconfig
+          chmod 600 /tmp/kubeconfig
+          kubectl --kubeconfig /tmp/kubeconfig apply -f k8s/
+          kubectl --kubeconfig /tmp/kubeconfig --namespace notes-app rollout status deploy/api --timeout=120s

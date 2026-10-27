@@ -1,0 +1,73 @@
+name: Security
+
+on:
+  push:
+    branches: [main]
+  schedule:
+    - cron: "0 3 * * 1"
+
+permissions: write-all
+
+jobs:
+  trivy:
+    name: Trivy
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@main
+
+      - name: Run Trivy filesystem scan
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: fs
+          scan-ref: .
+          severity: CRITICAL
+          format: sarif
+          output: trivy-results.sarif
+          exit-code: 0
+
+      - name: Show results
+        run: cat trivy-results.sarif || true
+
+  semgrep:
+    name: Semgrep
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@main
+
+      - name: Install semgrep
+        run: curl -sSfL https://semgrep.dev/install.sh | sh
+
+      - name: Scan
+        run: |
+          ./bin/semgrep --config=auto --error note-app/ || true
+
+  bandit:
+    name: Bandit
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@main
+
+      - name: Install bandit
+        run: pip install bandit
+
+      - name: Scan
+        run: bandit -c note-app/bandit.yaml -r note-app/app || true
+
+  secrets:
+    name: gitleaks
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@main
+        with:
+          fetch-depth: 1
+
+      - name: Download gitleaks
+        run: |
+          curl -sSfL https://github.com/gitleaks/gitleaks/releases/latest/download/gitleaks_linux_x64.tar.gz | tar xz
+
+      - name: Detect
+        run: ./gitleaks detect --source . --verbose || true

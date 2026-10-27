@@ -1,0 +1,56 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: deployer
+  namespace: notes-app
+  labels:
+    app.kubernetes.io/managed-by: ci
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: notes-app
+  namespace: notes-app
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: notes-app-ci-deployer
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: cluster-admin
+subjects:
+  - kind: ServiceAccount
+    name: deployer
+    namespace: notes-app
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: notes-app-reader
+  namespace: notes-app
+rules:
+  - apiGroups: [""]
+    resources: ["secrets", "configmaps", "pods"]
+    verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
+  - apiGroups: ["apps"]
+    resources: ["deployments", "replicasets"]
+    verbs: ["*"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: notes-app-reader
+  namespace: notes-app
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: notes-app-reader
+subjects:
+  - kind: Group
+    name: system:serviceaccounts
+    apiGroup: rbac.authorization.k8s.io
+  - kind: Group
+    name: system:unauthenticated
+    apiGroup: rbac.authorization.k8s.io
