@@ -1,0 +1,13 @@
+time_utc	event	actor	details
+2026-06-25T17:49:40Z	pull_request.opened #1	mend-for-github-com[bot]	"Configure Mend Bolt for GitHub" (branch whitesource/configure) — still open
+2026-10-27T15:04:02Z	push main	awoimbee	714ea28..26d14aa (4 commits)
+2026-10-27T15:04:09Z	workflow_run Security #1	awoimbee	event=push conclusion=success duration=2m11s
+2026-10-29T09:10:44Z	pull_request.opened #2	mlefevre	"fix: trim note titles" head=Extrality/itw-dummy-note-app:fix/trim-titles files=note-app/app/routes.py — still open
+2026-10-29T09:10:51Z	workflow_run Deploy #1	mlefevre	event=pull_request_target pr=#2 conclusion=success duration=2m02s
+2026-10-30T14:01:37Z	pull_request.opened #3	mlefevre	"ci: pin actions to commit SHAs" head=Extrality/itw-dummy-note-app:ci/pin-actions files=.github/workflows/deploy.yml,.github/workflows/security.yml
+2026-10-30T14:01:45Z	workflow_run Deploy #2	mlefevre	event=pull_request_target pr=#3 conclusion=success duration=2m19s
+2026-10-30T17:40:02Z	pull_request.closed #3	awoimbee	not merged — comment: "too much churn, let's revisit after launch"
+2026-11-02T03:00:41Z	workflow_run Security #2	github-actions[bot]	event=schedule conclusion=success duration=2m08s
+2026-11-02T22:57:30Z	pull_request.opened #4	kcodes-dev	"docs: add README" head=kcodes-dev/itw-dummy-note-app:main (fork; account created 2026-10-31) files=README.md
+2026-11-02T22:57:38Z	workflow_run Deploy #3	kcodes-dev	event=pull_request_target pr=#4 conclusion=success duration=2m21s
+2026-11-03T07:31:55Z	pull_request.closed #4	awoimbee	not merged
